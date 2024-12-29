@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ouverture Cadeau</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #a71d31;
+        }
+
+        .porte {
+            position: relative;
+            width: 150px;
+            height: 300px;
+            background-image: url('cadeau1.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            perspective: 500px;
+            border-radius: 20px;
+        }
+
+        .porte.ouverte {
+            background-image: none;
+        }
+
+        .porte::before, .porte::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+        }
+
+        .porte::before {
+            top: -20px;
+            width: 50px;
+            height: 30px;
+            background-color: gold;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .porte::after {
+            top: -10px;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        .contenu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("cadeau2.jpg");
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 1;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+            border-radius: 15px;
+        }
+
+        .porte.ouverte .contenu {
+            opacity: 1;
+            transform: scale(1);
+            animation: boum 0.5s forwards;
+        }
+
+        @keyframes boum {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .fireworks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .firework {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        /* Styles pour les différents types de feux d'artifice */
+        .firework.type1 {
+            background-color: #FFD700;
+            animation: explode1 0.6s ease-out forwards;
+        }
+
+        .firework.type2 {
+            background-color: #00FFFF;
+            animation: explode2 0.7s ease-out forwards;
+        }
+
+        .firework.type3 {
+            background-color: #F00;
+            animation: explode3 0.5s ease-out forwards;
+        }
+        .firework.type4 {
+            background-color: #0f0;
+            animation: explode4 0.9s ease-out forwards;
+        }
+        .firework.type5 {
+            background-color: #001cbd;
+            animation: explode5 0.7s ease-out forwards;
+        }
+        .firework.type6 {
+            background-color: #6d1032;
+            animation: explode6 0.7s ease-out forwards;
+        }
+
+        @keyframes explode1 {
+            0% { transform: scale(0) translate(-50%, -50%); opacity: 1; }
+            100% { transform: scale(6) translate(-50%, -50%); opacity: 0; }
+        }
+
+        @keyframes explode2 {
+            0% { transform: scale(0) translate(-50%, -50%) rotate(45deg); opacity: 1; }
+            100% { transform: scale(7) translate(-50%, -50%) rotate(90deg); opacity: 0; }
+        }
+        @keyframes explode3 {
+            0% { transform: scale(0) translate(-50%, -50%); opacity: 1; }
+            100% { transform: scale(4) translate(-50%, -50%); opacity: 0; }
+        }
+                @keyframes explode4 {
+            0% { transform: scale(0) translate(-50%, -50%) rotate(-45deg); opacity: 1; }
+            100% { transform: scale(8) translate(-50%, -50%) rotate(-90deg); opacity: 0; }
+        }
+        @keyframes explode5 {
+            0% { transform: scale(0) translate(-50%, -50%) rotate(-45deg); opacity: 1; }
+            100% { transform: scale(8) translate(-50%, -50%) rotate(-90deg); opacity: 0; }
+        }
+        @keyframes explode6 {
+            0% { transform: scale(0) translate(-50%, -50%); opacity: 1; }
+            100% { transform: scale(4) translate(-50%, -50%); opacity: 0; }
+        }
+        .new-year-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      text-align: center;
+      animation: new-year-message-animation 10s ease-in-out forwards;
+    }
+
+    .new-year-message p {
+      font-style: italic;
+      font-size: 1.3rem;
+      margin: 0;
+    }
+
+    @keyframes new-year-message-animation {
+      0% { opacity: 0; transform: translateY(-50px); }
+      20% { opacity: 1; transform: translateY(0); }
+      80% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(50px); }
+    }
+
+
+    </style>
+</head>
+<body>
+    <div class="new-year-message">
+        <p>Que cette nouvelle année soit remplie de joie,<br>
+           de bonheur et de prospérité.<br>
+           Que tous vos rêves se réalisent.<br>
+           Que la santé et l'amour<br>
+           vous accompagnent tout au long de l'année.</p>
+      </div>
+    <div class="porte" id="porte">
+        <h4 style="text-align: center; margin-top: 100px;">
+            <p><strong>Cliquez pour ouvrir</strong></p>
+          </h4>
+        <div class="contenu"></div>
+    </div>
+
+    <div class="fireworks" id="fireworks"></div>
+
+    <script>
+        const porte = document.getElementById('porte');
+        const fireworksContainer = document.getElementById('fireworks');
+        const colors = ['#FFD700', '#FFA500', '#FF8C00', '#FF7F50', '#FF6347', '#00FFFF', '#ADD8E6', '#87CEEB', '#87CEFA','#0f0'];
+
+        function createFirework() {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            const type = Math.floor(Math.random() * 2) + 1; // Nombre aléatoire entre 1 et 4
+            firework.classList.add(`type${type}`);
+
+            firework.style.left = `${Math.random() * 100}vw`;
+            firework.style.top = `${Math.random() * 50}vh`;
+            const size = Math.random() * 15 + 10;
+            firework.style.width = `${size}px`;
+            firework.style.height = `${size}px`;
+            firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+            fireworksContainer.appendChild(firework);
+
+            firework.addEventListener('animationend', () => {
+                firework.remove();
+            });
+        }
+
+        porte.addEventListener('click', () => {
+            porte.classList.add('ouverte');
+            setTimeout(() => {
+                const fireworkInterval = setInterval(createFirework, 100); // Vitesse accrue
+
+                setTimeout(() => {
+                    clearInterval(fireworkInterval);
+                    window.location.href = '2025.html';
+                }, 300); // Réduction du temps total des feux d'artifice
+            }, 1000); // Réduction du délai avant les feux d'artifice
+        });
+    </script>
+
+</body>
+</html>
